@@ -17,7 +17,7 @@ It is intentionally designed to feel like a product onboarding:
 
 ## Use when
 
-- The user just cloned the repo and this is the first Codex prompt.
+- The user just cloned the repo and this is the first Codex prompt (including a plain greeting like `hi`).
 - The user says “initialize”, “bootstrap”, “setup”, or “make it ready”.
 - The onboarding state file is missing/outdated.
 
