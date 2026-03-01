@@ -19,7 +19,7 @@ It is intentionally designed to feel like a product onboarding:
 
 - The user just cloned the repo and this is the first Codex prompt (including a plain greeting like `hi`).
 - The user says “initialize”, “bootstrap”, “setup”, or “make it ready”.
-- The onboarding state file is missing/outdated.
+- The onboarding state file is missing/outdated, or `operational_ready` is not true.
 
 ## Don't use when
 
@@ -30,7 +30,8 @@ It is intentionally designed to feel like a product onboarding:
 
 - Onboarding summary with selected option (A/B/C) and preflight result.
 - Mandatory post-onboarding automation install checklist generated from `docs/agents/AUTOMATIONS.md` + `automations/registry.json`.
-- On success: `.cache/leanatlas/onboarding/state.json`.
+- On success: `.cache/leanatlas/onboarding/state.json` with environment completion.
+- On operational readiness: same state file with `steps.automations=ok` and `operational_ready=true`.
 - After bootstrap+doctor success: compacted root `AGENTS.md` onboarding block.
 
 ## Must-run checks
@@ -70,9 +71,10 @@ If the user does not clearly choose A/B/C, do not proceed.
 
 ## First-run detection
 
-Treat onboarding as required when this file is missing or outdated:
+Treat onboarding as required when this file is missing/outdated, or when automation readiness is missing:
 
 - `.cache/leanatlas/onboarding/state.json`
+- required operational gate: `steps.automations == "ok"` and `operational_ready == true`
 
 This path is gitignored.
 
@@ -115,20 +117,22 @@ Hard requirements:
 - Keep diffs minimal.
 - Any produced artifacts must land under `artifacts/**`.
 
-## Codex App automations (required post-onboarding step)
+## Codex App automations (required operational gate after environment setup)
 
-After A or B succeeds, Codex must provide a “ready-to-paste automation bundle” and a concrete install checklist:
+After A or B succeeds, Codex must drive installation via the checklist and block normal task work until verified:
 
 - Read: `docs/agents/AUTOMATIONS.md` and `automations/registry.json`.
 - Use install template: `docs/agents/templates/AUTOMATION_INSTALL_CHECKLIST.md`.
-- Output: three automation prompts (smoke/core/nightly) plus a robustness checklist.
-- List all active automation IDs and ask the user to create them in Codex App UI.
-- Require one manual trigger per automation and confirmation that outputs land under `artifacts/**`.
+- Generate one install block per active automation id (do not ask the user to author prompts manually).
+- Present blocks in checklist order and ask for a short per-item confirmation.
+- Require one manual trigger per automation and then verify evidence:
+  - `./.venv/bin/python tools/onboarding/verify_automation_install.py --mark-done`
 
 Important:
 
 - Automations are configured in the Codex App UI.
-- Codex should not claim it can silently install them.
+- Codex should not claim it can silently install them without user confirmation.
+- If the automation gate is not completed, reply with install/verification instructions only.
 
 ## Done state
 
@@ -146,6 +150,7 @@ After `bootstrap` + `doctor` both pass, run:
 Expected result:
 - root `AGENTS.md` onboarding section is compacted
 - verbose copy remains in `docs/agents/archive/AGENTS_ONBOARDING_VERBOSE.md`
+- environment completion can be true while operational readiness is still blocked
 
 ## Deliverables (what to report back)
 
@@ -155,4 +160,5 @@ Expected result:
 - The key verification outputs (short excerpts only).
 - Where the onboarding state was written.
 - Which active automations must be installed next, with install order.
+- Whether onboarding is only environment-complete or fully operational-ready.
 - Any remaining TODOs (file paths).
