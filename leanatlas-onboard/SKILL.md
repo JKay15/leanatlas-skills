@@ -1,6 +1,6 @@
 ---
 name: leanatlas-onboard
-description: "First-run onboarding: print the LeanAtlas banner, ask for consent, initialize env + contracts + core tests, and generate Codex App automation prompts."
+description: "First-run onboarding: print the LeanAtlas onboarding visual card, ask for consent, initialize env + contracts + core tests, and generate Codex App automation prompts."
 ---
 
 ## What this skill is
@@ -9,7 +9,7 @@ This skill turns a fresh clone into a usable workspace **without asking the huma
 
 It is intentionally designed to feel like a product onboarding:
 
-1) show a banner,
+1) show a visual hero + info card,
 2) explain what will happen,
 3) ask for consent,
 4) run setup + verify,
@@ -39,18 +39,28 @@ It is intentionally designed to feel like a product onboarding:
 - Preflight checks: `test -x ./.venv/bin/python`, deps import, and `lake --version`.
 - Verification gate for setup path: `./.venv/bin/python tests/run.py --profile core`.
 
-## Banner (print on first-run)
+## Banner (locale-aware, print on first-run)
+
+Default visual (from `docs/agents/BRANDING.md`):
 
 ```text
-       □   △   ○
-┌──────────────────────┐
-│  L E A N  A T L A S  │
-└──────────────────────┘
++------------------------------------------------------------------------------+
+| LEANATLAS :: Powered by LeanAtlas                                            |
++------------------------------------------------------------------------------+
+| [i] Welcome to LeanAtlas                                                     |
+| Choose: A) Python-only  B) Full init  C) Skip                                |
+| Operational gate: install/verify active automations before normal tasks.     |
++------------------------------------------------------------------------------+
 ```
 
-Banner source of truth:
+Locale-aware rule:
 
 - `docs/agents/BRANDING.md`
+- `docs/agents/locales/zh-CN/ONBOARDING_BANNER.md`
+
+Routing:
+- If the user prompt is Chinese/CJK, render the zh-CN onboarding visual from the locale asset.
+- Otherwise, render the default onboarding visual from `docs/agents/BRANDING.md`.
 
 ## Consent gate (hard rule)
 
