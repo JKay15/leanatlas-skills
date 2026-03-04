@@ -48,7 +48,7 @@ Default visual (from `docs/agents/BRANDING.md`):
 | LEANATLAS :: Powered by LeanAtlas                                            |
 +------------------------------------------------------------------------------+
 | [i] Welcome to LeanAtlas                                                     |
-| Choose: A) Python-only  B) Full init  C) Skip                                |
+| Choose: A) Full init (Recommended)  B) Python-only  C) Skip                  |
 | Operational gate: install/verify active automations before normal tasks.     |
 +------------------------------------------------------------------------------+
 ```
@@ -66,13 +66,13 @@ Routing:
 
 Before running *any* networked install or writing setup state, ask the user to choose:
 
-**A) Python-only setup (safe + fast)**
+**A) Full maintainer initialization (recommended)**
+- Execute `INIT_FOR_CODEX.md` (Steps 0–7, plus optional Step 8).
+
+**B) Python-only setup (safe + fast)**
 - Ensure `uv` exists.
 - Create/sync `.venv` via `uv sync --locked`.
 - Run core contracts: `.venv/bin/python tests/run.py --profile core`.
-
-**B) Full maintainer initialization (recommended)**
-- Execute `INIT_FOR_CODEX.md` (Steps 0–7, plus optional Step 8).
 
 **C) Skip (do nothing)**
 - Continue with the user’s task.
@@ -104,18 +104,7 @@ If all pass:
 
 ## Execution (A/B)
 
-### A) Python-only
-
-1) Verify `uv`:
-   - `uv --version`
-2) If preflight failed, sync venv:
-   - `uv sync --locked`
-3) Verify critical imports (always):
-   - `./.venv/bin/python -c "import yaml, jsonschema; print('deps-ok')"`
-4) Run core contracts:
-   - `./.venv/bin/python tests/run.py --profile core`
-
-### B) Full maintainer init
+### A) Full maintainer init
 
 Follow `INIT_FOR_CODEX.md` as an executable checklist.
 
@@ -126,6 +115,17 @@ Hard requirements:
 - Fix root causes (no retry/jitter hacks).
 - Keep diffs minimal.
 - Any produced artifacts must land under `artifacts/**`.
+
+### B) Python-only
+
+1) Verify `uv`:
+   - `uv --version`
+2) If preflight failed, sync venv:
+   - `uv sync --locked`
+3) Verify critical imports (always):
+   - `./.venv/bin/python -c "import yaml, jsonschema; print('deps-ok')"`
+4) Run core contracts:
+   - `./.venv/bin/python tests/run.py --profile core`
 
 ## Codex App automations (required operational gate after environment setup)
 
