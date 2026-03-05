@@ -19,7 +19,7 @@ description: Solve ONE problem in OPERATOR mode by running the LeanAtlas small l
 
 ## Must-run checks
 - `lake build Problems.<slug>.Proof`
-- `python tools/problem_state/reconcile.py --problem <slug> --run-report Problems/<slug>/Reports/<run_id>/RunReport.json`
+- `uv run --locked python tools/problem_state/reconcile.py --problem <slug> --run-report Problems/<slug>/Reports/<run_id>/RunReport.json`
 
 ## Inputs
 - `problem_slug`: directory name under `Problems/` (e.g. `am_gm_ineq_2026_01`)

@@ -34,9 +34,8 @@ description: Use this skill in MAINTAINER mode to create a self-contained ExecPl
    - implement
    - update docs/contracts/schemas as needed
 5) Verify:
-   - `python tests/run.py --profile core`
+   - `uv run --locked python tests/run.py --profile core`
    - relevant e2e/scenario tests
 6) Ensure repo is clean:
    - no artifacts/logs committed
    - `git status --porcelain` must be empty
-

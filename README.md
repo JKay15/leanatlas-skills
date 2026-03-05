@@ -14,6 +14,7 @@ This directory contains **skills for Codex**. Each skill is a self-contained rou
 - `.agents/skills/leanatlas-agent-eval/SKILL.md` — Phase6 agent eval packs/scenarios.
 - `.agents/skills/leanatlas-skills-growth/SKILL.md` — Skills/KB growth loop (mining + regen + eval).
 - `.agents/skills/leanatlas-run-workflow-tests/SKILL.md` — Running the workflow tests (core/e2e/scenarios).
+- `.agents/skills/leanatlas-loop-maintainer-ops/SKILL.md` — LOOP maintainer ops (provider routing + SDK/MCP alignment + reviewer-history consistency).
 
 ## Rule
 If you add a new skill directory, you MUST update this index and the docs navigation map:

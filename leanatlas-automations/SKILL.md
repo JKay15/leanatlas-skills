@@ -40,21 +40,21 @@ Run deterministic steps exactly as specified in the registry.
 
 Useful entrypoints:
 - Validate registry structure (spec-level):
-  - `python tests/automation/validate_registry.py`
+  - `uv run --locked python tests/automation/validate_registry.py`
 - Dry-run a single automation (deterministic steps only):
-  - `python tests/automation/dry_run_single.py --id <automation_id>`
+  - `uv run --locked python tests/automation/dry_run_single.py --id <automation_id>`
 - Dry-run all ACTIVE + core-tier automations:
-  - `python tests/automation/run_dry_runs.py`
+  - `uv run --locked python tests/automation/run_dry_runs.py`
 - Nightly-style deterministic execution + per-run archival:
-  - `python tools/coordination/automation_nightly.py --cadence nightly`
+  - `uv run --locked python tools/coordination/automation_nightly.py --cadence nightly`
 
 Other useful platform tools:
 - Collect telemetry into unified input root (recommended before trace mining / KB suggestions):
-  - `python tools/bench/collect_telemetry.py --repo-root . --out-root artifacts/telemetry --clean`
+  - `uv run --locked python tools/bench/collect_telemetry.py --repo-root . --out-root artifacts/telemetry --clean`
 - Compare two bench reports (today vs yesterday style):
-  - `python tools/bench/compare_bench_reports.py --old <old.json> --new <new.json> --out <delta.json> --summary-md <delta.md>`
+  - `uv run --locked python tools/bench/compare_bench_reports.py --old <old.json> --new <new.json> --out <delta.json> --summary-md <delta.md>`
 - Generate skill stub/coverage plan when new commands appear:
-  - `python tools/coordination/skills_stubgen.py --repo-root . --out artifacts/skills_regen/stub_plan.json`
+  - `uv run --locked python tools/coordination/skills_stubgen.py --repo-root . --out artifacts/skills_regen/stub_plan.json`
 
 Write findings only under `artifacts/**`.
 
