@@ -32,6 +32,7 @@ It is intentionally designed to feel like a product onboarding:
 - Mandatory post-onboarding automation install checklist generated from `docs/agents/AUTOMATIONS.md` + `automations/registry.json`.
 - On success: `.cache/leanatlas/onboarding/state.json` with environment completion.
 - On operational readiness: same state file with `steps.automations=ok` and `operational_ready=true`.
+- Post-onboarding LOOP defaults use the reserved local path `.cache/leanatlas/onboarding/loop_preferences.json` when explicitly staged.
 - After bootstrap+doctor success: compacted root `AGENTS.md` onboarding block.
 
 ## Must-run checks
@@ -85,6 +86,7 @@ Treat onboarding as required when this file is missing/outdated, or when automat
 
 - `.cache/leanatlas/onboarding/state.json`
 - required operational gate: `steps.automations == "ok"` and `operational_ready == true`
+- post-onboarding LOOP defaults use the reserved path `.cache/leanatlas/onboarding/loop_preferences.json` when explicitly staged
 
 This path is gitignored.
 
@@ -143,6 +145,18 @@ Important:
 - Automations are configured in the Codex App UI.
 - Codex should not claim it can silently install them without user confirmation.
 - If the automation gate is not completed, reply with install/verification instructions only.
+
+## Post-onboarding LOOP defaults
+
+Once the environment is operational-ready, explain/stage LOOP defaults as a post-onboarding preference step, not as a bootstrap blocker.
+
+Supported presets:
+- `Balanced`
+- `Budget Saver`
+- `Auditable`
+
+Important:
+- Do not imply that onboarding already auto-writes or auto-applies these defaults unless that wiring has landed.
 
 ## Done state
 

@@ -26,6 +26,7 @@ description: Accelerate maintainer AI review by deterministic scope partitioning
 ## Preconditions
 - MAINTAINER mode is active and an ExecPlan already exists.
 - The target review scope is a non-empty file list rooted under the repository.
+- Future workflow wiring may govern large-scope review through a stored pyramid preference; today this skill should treat that preference surface as staged rather than automatically applied.
 
 ## Steps
 1) Normalize and partition the review scope with `partition_review_scope_paths(...)`.
