@@ -151,12 +151,15 @@ Important:
 Once the environment is operational-ready, explain/stage LOOP defaults as a post-onboarding preference step, not as a bootstrap blocker.
 
 Supported presets:
-- `Balanced`
 - `Budget Saver`
+  - current default reviewer path: `FAST + low`
 - `Auditable`
+ - `Balanced`
 
 Important:
 - Do not imply that onboarding already auto-writes or auto-applies these defaults unless that wiring has landed.
+- `medium` is a bounded escalation only for small-scope high-risk core logic.
+- `STRICT / xhigh` is exceptional and should not be presented as the normal default.
 
 ## Done state
 

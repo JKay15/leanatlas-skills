@@ -20,9 +20,13 @@ description: Route work through the current LOOP mainline system in LeanAtlas, u
   - review acceleration / review orchestration work
 - An explicit statement of whether the requested capability is implemented, partial, or planned
 - Staged user preference presets when the task depends on default LOOP operating mode:
-  - `Balanced`
   - `Budget Saver`
+    - current default reviewer path: `FAST + low`
+    - default mainline recommendation
+  - `Balanced`
   - `Auditable`
+  - `medium` only as a bounded escalation for small-scope high-risk core logic
+  - `STRICT / xhigh` only for exceptional audit-heavy paths
 
 ## Must-run checks
 - `uv run --locked python tests/contract/check_loop_mainline_docs_integration.py`

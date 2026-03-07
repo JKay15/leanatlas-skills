@@ -16,6 +16,7 @@ description: Accelerate maintainer AI review by deterministic scope partitioning
 - A deterministic partition list for the review scope.
 - A pyramid review plan whose final integrated stage is the only closeout-eligible stage.
 - A narrowed effective scope that can be fed back into later deep/strict stages after the fast scan.
+- Default guidance that `FAST + low` is the baseline reviewer path, `medium` is only a bounded escalation for small-scope high-risk core logic, and `STRICT / xhigh` is exceptional.
 
 ## Must-run checks
 - `uv run --locked python tests/contract/check_loop_review_strategy.py`
@@ -27,6 +28,7 @@ description: Accelerate maintainer AI review by deterministic scope partitioning
 - MAINTAINER mode is active and an ExecPlan already exists.
 - The target review scope is a non-empty file list rooted under the repository.
 - Future workflow wiring may govern large-scope review through a stored pyramid preference; today this skill should treat that preference surface as staged rather than automatically applied.
+- Default operating baseline: start with `FAST + low`; only escalate to `medium` on small-scope high-risk core logic, and reserve `STRICT / xhigh` for exceptional cases.
 
 ## Steps
 1) Normalize and partition the review scope with `partition_review_scope_paths(...)`.
