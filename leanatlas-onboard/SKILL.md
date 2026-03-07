@@ -1,6 +1,6 @@
 ---
 name: leanatlas-onboard
-description: "First-run onboarding: print the LeanAtlas banner, ask for consent, initialize env + contracts + core tests, and generate Codex App automation prompts."
+description: "First-run onboarding: print the LeanAtlas onboarding visual card, ask for consent, initialize env + contracts + core tests, and generate Codex App automation prompts."
 ---
 
 ## What this skill is
@@ -9,7 +9,7 @@ This skill turns a fresh clone into a usable workspace **without asking the huma
 
 It is intentionally designed to feel like a product onboarding:
 
-1) show a banner,
+1) show a visual hero + info card,
 2) explain what will happen,
 3) ask for consent,
 4) run setup + verify,
@@ -32,6 +32,7 @@ It is intentionally designed to feel like a product onboarding:
 - Mandatory post-onboarding automation install checklist generated from `docs/agents/AUTOMATIONS.md` + `automations/registry.json`.
 - On success: `.cache/leanatlas/onboarding/state.json` with environment completion.
 - On operational readiness: same state file with `steps.automations=ok` and `operational_ready=true`.
+- Post-onboarding LOOP defaults use the reserved local path `.cache/leanatlas/onboarding/loop_preferences.json` when explicitly staged.
 - After bootstrap+doctor success: compacted root `AGENTS.md` onboarding block.
 
 ## Must-run checks
@@ -39,30 +40,40 @@ It is intentionally designed to feel like a product onboarding:
 - Preflight checks: `test -x ./.venv/bin/python`, deps import, and `lake --version`.
 - Verification gate for setup path: `./.venv/bin/python tests/run.py --profile core`.
 
-## Banner (print on first-run)
+## Banner (locale-aware, print on first-run)
+
+Default visual (from `docs/agents/BRANDING.md`):
 
 ```text
-       □   △   ○
-┌──────────────────────┐
-│  L E A N  A T L A S  │
-└──────────────────────┘
++------------------------------------------------------------------------------+
+| LEANATLAS :: Powered by LeanAtlas                                            |
++------------------------------------------------------------------------------+
+| [i] Welcome to LeanAtlas                                                     |
+| Choose: A) Full init (Recommended)  B) Python-only  C) Skip                  |
+| Operational gate: install/verify active automations before normal tasks.     |
++------------------------------------------------------------------------------+
 ```
 
-Banner source of truth:
+Locale-aware rule:
 
 - `docs/agents/BRANDING.md`
+- `docs/agents/locales/zh-CN/ONBOARDING_BANNER.md`
+
+Routing:
+- If the user prompt is Chinese/CJK, render the zh-CN onboarding visual from the locale asset.
+- Otherwise, render the default onboarding visual from `docs/agents/BRANDING.md`.
 
 ## Consent gate (hard rule)
 
 Before running *any* networked install or writing setup state, ask the user to choose:
 
-**A) Python-only setup (safe + fast)**
+**A) Full maintainer initialization (recommended)**
+- Execute `INIT_FOR_CODEX.md` (Steps 0–7, plus optional Step 8).
+
+**B) Python-only setup (safe + fast)**
 - Ensure `uv` exists.
 - Create/sync `.venv` via `uv sync --locked`.
 - Run core contracts: `.venv/bin/python tests/run.py --profile core`.
-
-**B) Full maintainer initialization (recommended)**
-- Execute `INIT_FOR_CODEX.md` (Steps 0–7, plus optional Step 8).
 
 **C) Skip (do nothing)**
 - Continue with the user’s task.
@@ -75,6 +86,7 @@ Treat onboarding as required when this file is missing/outdated, or when automat
 
 - `.cache/leanatlas/onboarding/state.json`
 - required operational gate: `steps.automations == "ok"` and `operational_ready == true`
+- post-onboarding LOOP defaults use the reserved path `.cache/leanatlas/onboarding/loop_preferences.json` when explicitly staged
 
 This path is gitignored.
 
@@ -94,18 +106,7 @@ If all pass:
 
 ## Execution (A/B)
 
-### A) Python-only
-
-1) Verify `uv`:
-   - `uv --version`
-2) If preflight failed, sync venv:
-   - `uv sync --locked`
-3) Verify critical imports (always):
-   - `./.venv/bin/python -c "import yaml, jsonschema; print('deps-ok')"`
-4) Run core contracts:
-   - `./.venv/bin/python tests/run.py --profile core`
-
-### B) Full maintainer init
+### A) Full maintainer init
 
 Follow `INIT_FOR_CODEX.md` as an executable checklist.
 
@@ -116,6 +117,17 @@ Hard requirements:
 - Fix root causes (no retry/jitter hacks).
 - Keep diffs minimal.
 - Any produced artifacts must land under `artifacts/**`.
+
+### B) Python-only
+
+1) Verify `uv`:
+   - `uv --version`
+2) If preflight failed, sync venv:
+   - `uv sync --locked`
+3) Verify critical imports (always):
+   - `./.venv/bin/python -c "import yaml, jsonschema; print('deps-ok')"`
+4) Run core contracts:
+   - `./.venv/bin/python tests/run.py --profile core`
 
 ## Codex App automations (required operational gate after environment setup)
 
@@ -133,6 +145,18 @@ Important:
 - Automations are configured in the Codex App UI.
 - Codex should not claim it can silently install them without user confirmation.
 - If the automation gate is not completed, reply with install/verification instructions only.
+
+## Post-onboarding LOOP defaults
+
+Once the environment is operational-ready, explain/stage LOOP defaults as a post-onboarding preference step, not as a bootstrap blocker.
+
+Supported presets:
+- `Balanced`
+- `Budget Saver`
+- `Auditable`
+
+Important:
+- Do not imply that onboarding already auto-writes or auto-applies these defaults unless that wiring has landed.
 
 ## Done state
 

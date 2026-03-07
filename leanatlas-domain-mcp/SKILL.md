@@ -32,9 +32,9 @@ owner: PHASE-4
   - `docs/setup/external/msc2020.md`
 
 ## Capability entrypoints (Phase4 manifest)
-- Start server (stdio): `python tools/lean_domain_mcp/domain_mcp_server.py ...`
-- Ingest MSC2020 CSV → bundle: `python tools/lean_domain_mcp/ingest_msc2020_csv.py ...`
-- Prune helper (optional): `python tools/retrieval/domain_prune.py ...`
+- Start server (stdio): `uv run --locked python tools/lean_domain_mcp/domain_mcp_server.py ...`
+- Ingest MSC2020 CSV → bundle: `uv run --locked python tools/lean_domain_mcp/ingest_msc2020_csv.py ...`
+- Prune helper (optional): `uv run --locked python tools/retrieval/domain_prune.py ...`
 
 ---
 
@@ -52,7 +52,7 @@ owner: PHASE-4
 
 ### Step 0) Detect MCP availability (fast)
 - If MCP client tooling exists: call `domain/info`.
-- If you only have local repo scripts: run `python tools/lean_domain_mcp/domain_mcp_server.py --msc2020-mini --smoke`.
+- If you only have local repo scripts: run `uv run --locked python tools/lean_domain_mcp/domain_mcp_server.py --msc2020-mini --smoke`.
 
 If unavailable/fails: set `fallback_used=true` and proceed with:
 - `domain_id="UNKNOWN"`
