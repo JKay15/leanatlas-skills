@@ -195,6 +195,18 @@ Minimum discoverability:
 - point directly to `tools/loop/review_prompting.py`
 - route follow-up maintainer questions through `docs/agents/LOOP_MAINLINE.md`
 
+## Repository-external paper ingress
+
+LeanAtlas onboarding must not imply that repository-external paper sources automatically inherit LeanAtlas `AGENTS.md` or workflow skills.
+
+If the user wants LeanAtlas to formalize a paper source outside this repository:
+- say that LeanAtlas instructions are repository-scoped
+- require the source to be ingressed into LeanAtlas-controlled scope first
+- acceptable staging examples:
+  - `.cache/leanatlas/tmp/<paper_id>/source/**`
+  - or a prepared `Problems/<slug>/` contract entry that then follows `docs/agents/OPERATOR_WORKFLOW.md`
+- if the user only points at an external file without ingress, do not pretend OPERATOR/formalization routing is already active
+
 ## Done state
 
 If A or B completes its local setup and verification gates, update:
