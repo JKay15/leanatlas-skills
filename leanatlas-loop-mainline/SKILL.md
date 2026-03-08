@@ -5,7 +5,7 @@ description: Route work through the current LOOP mainline system in LeanAtlas, u
 
 ## Use when
 - You need to understand what LOOP capabilities are already available in LeanAtlas mainline.
-- You need to route a task to the right LOOP entrypoint before editing code or planning a review.
+- You need to route a task to the right LOOP entrypoint before editing code or planning a review, including generic review supersession / reconciliation work.
 - You need to distinguish `LOOP core` from `LeanAtlas adapters` and avoid treating planned features as if they were already implemented.
 
 ## Don't use when
@@ -48,7 +48,8 @@ description: Route work through the current LOOP mainline system in LeanAtlas, u
    - a LeanAtlas adapter/workflow layer
    - a planned/not-yet-implemented theme
 3) If the task is a non-trivial maintainer change, switch to the ExecPlan path via `.agents/skills/leanatlas-maintainer-execplan/SKILL.md`.
-4) If the task is review-specific, route into:
-   - `.agents/skills/leanatlas-loop-maintainer-ops/SKILL.md`
-   - or `.agents/skills/leanatlas-loop-review-acceleration/SKILL.md`
-5) If the task is operator/use-phase only, stay inside `docs/agents/OPERATOR_WORKFLOW.md` and avoid maintainer-only surfaces.
+4) If the task is authoritative review-finding settlement, route first to `.agents/skills/loop-review-reconciliation/SKILL.md`.
+5) If the task is review-specific but not authoritative reconciliation, route into:
+   - `.agents/skills/leanatlas-loop-maintainer-ops/SKILL.md` for LeanAtlas-local wiring
+   - or `.agents/skills/leanatlas-loop-review-acceleration/SKILL.md` for partitioning, narrowing, or pyramid planning
+6) If the task is operator/use-phase only, stay inside `docs/agents/OPERATOR_WORKFLOW.md` and avoid maintainer-only surfaces.

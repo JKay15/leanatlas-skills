@@ -1,12 +1,12 @@
 ---
 name: leanatlas-loop-maintainer-ops
-description: Maintain and upgrade LOOP provider routing, Python SDK/MCP interfaces, and reviewer-history consistency contracts in MAINTAINER mode.
+description: Maintain and upgrade LOOP provider routing, Python SDK/MCP interfaces, reviewer-history consistency, and LeanAtlas-side wiring around generic review reconciliation in MAINTAINER mode.
 ---
 
 ## Use when
 - You are changing LOOP contracts/schemas/tests related to provider routing (`codex exec` or other `agent_provider`) and need deterministic evidence.
 - You are upgrading LOOP Python SDK/MCP surfaces and must keep docs/contracts/schemas/tests aligned.
-- You are fixing reviewer-history contradiction/nitpick detection or instruction-scope (`AGENTS.md` chain) visibility guarantees.
+- You are fixing reviewer-history contradiction/nitpick detection, generic review reconciliation wiring, or instruction-scope (`AGENTS.md` chain) visibility guarantees.
 
 ## Don't use when
 - You are proving a single theorem/problem in OPERATOR mode with no system-contract changes.
@@ -39,4 +39,5 @@ description: Maintain and upgrade LOOP provider routing, Python SDK/MCP interfac
 2) Apply TDD: update contract checks/fixtures first, then implementation docs/schema.
 3) Ensure provider routing evidence is explicit (`agent_provider_id`, resolved invocation, instruction scope refs).
 4) Ensure reviewer-history evidence is append-only and re-fed to later rounds (`history_context_refs`, contradiction/nitpick summary).
-5) Run required checks and record outcomes in ExecPlan decision log.
+5) If the task specifically concerns authoritative finding settlement, route the core semantics through `.agents/skills/loop-review-reconciliation/SKILL.md` and keep this skill focused on LeanAtlas-local docs/tests/workflow wiring.
+6) Run required checks and record outcomes in ExecPlan decision log.
