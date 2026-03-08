@@ -30,10 +30,10 @@ It is intentionally designed to feel like a product onboarding:
 
 - Onboarding summary with selected option (A/B/C) and preflight result.
 - Mandatory post-onboarding automation install checklist generated from `docs/agents/AUTOMATIONS.md` + `automations/registry.json`.
-- On success: `.cache/leanatlas/onboarding/state.json` with environment completion.
+- After `bootstrap` + `doctor` + `real_agent_cmd` all pass: `.cache/leanatlas/onboarding/state.json` with environment completion.
 - On operational readiness: same state file with `steps.automations=ok` and `operational_ready=true`.
 - Post-onboarding LOOP defaults use the reserved local path `.cache/leanatlas/onboarding/loop_preferences.json` when explicitly staged.
-- After bootstrap+doctor success: compacted root `AGENTS.md` onboarding block.
+- After `bootstrap` + `doctor` + `real_agent_cmd` all pass: compacted root `AGENTS.md` onboarding block.
 
 ## Must-run checks
 
@@ -73,7 +73,11 @@ Before running *any* networked install or writing setup state, ask the user to c
 **B) Python-only setup (safe + fast)**
 - Ensure `uv` exists.
 - Create/sync `.venv` via `uv sync --locked`.
-- Run core contracts: `.venv/bin/python tests/run.py --profile core`.
+- Still run the promised repo-local onboarding gates:
+  - ensure Repo-B skills are mounted (`.agents/skills/**`)
+  - install repo hooks via `bash scripts/install_repo_git_hooks.sh`
+  - run Lean warmup verification (`importGraph` check + `lake build LeanAtlas` + `lake lint`)
+  - run core contracts: `.venv/bin/python tests/run.py --profile core`
 
 **C) Skip (do nothing)**
 - Continue with the user’s task.
@@ -126,7 +130,14 @@ Hard requirements:
    - `uv sync --locked`
 3) Verify critical imports (always):
    - `./.venv/bin/python -c "import yaml, jsonschema; print('deps-ok')"`
-4) Run core contracts:
+4) Ensure Repo-B skills are mounted (`.agents/skills/**`); if they are missing, initialize the skill subtree before continuing.
+5) Install repo-local git hooks:
+   - `bash scripts/install_repo_git_hooks.sh`
+6) Run Lean warmup verification:
+   - `test -d ./.lake/packages/importGraph`
+   - `lake build LeanAtlas`
+   - `lake lint`
+7) Run core contracts:
    - `./.venv/bin/python tests/run.py --profile core`
 
 ## Codex App automations (required operational gate after environment setup)
@@ -166,21 +177,27 @@ Important:
 
 ## Done state
 
-If A or B completes successfully, write:
+If A or B completes its local setup and verification gates, update:
 
 - `.cache/leanatlas/onboarding/state.json`
 
 Use the minimal schema defined in `docs/agents/ONBOARDING.md`.
 
-After `bootstrap` + `doctor` both pass, run:
+Record the bootstrap/doctor progress first:
 
 - `./.venv/bin/python tools/onboarding/finalize_onboarding.py --step bootstrap`
 - `./.venv/bin/python tools/onboarding/finalize_onboarding.py --step doctor`
 
-Expected result:
+Environment completion is stricter:
+- do not mark the environment complete before `bootstrap` + `doctor` + `real_agent_cmd` all pass
+- do not compact the root `AGENTS.md` onboarding block before `real_agent_cmd` passes
+- when real-agent configuration succeeds, also run:
+  - `./.venv/bin/python tools/onboarding/finalize_onboarding.py --step real_agent_cmd`
+
+Expected result after `bootstrap` + `doctor` + `real_agent_cmd` all pass:
 - root `AGENTS.md` onboarding section is compacted
 - verbose copy remains in `docs/agents/archive/AGENTS_ONBOARDING_VERBOSE.md`
-- environment completion can be true while operational readiness is still blocked
+- environment completion can be true while operational readiness is still blocked until the automations step passes
 
 ## Deliverables (what to report back)
 
