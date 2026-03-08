@@ -34,6 +34,11 @@ It is intentionally designed to feel like a product onboarding:
 - On operational readiness: same state file with `steps.automations=ok` and `operational_ready=true`.
 - Post-onboarding LOOP defaults use the reserved local path `.cache/leanatlas/onboarding/loop_preferences.json` when explicitly staged.
 - After `bootstrap` + `doctor` + `real_agent_cmd` all pass: compacted root `AGENTS.md` onboarding block.
+- Post-onboarding discoverability must explicitly surface reviewer exhaustiveness:
+  - reviewer exhaustiveness
+  - `review.prompt.exhaustive.v1`
+  - `tools/loop/review_prompting.py`
+  - `docs/agents/LOOP_MAINLINE.md`
 
 ## Must-run checks
 
@@ -174,6 +179,21 @@ Important:
 - Do not imply that onboarding already auto-writes or auto-applies these defaults unless that wiring has landed.
 - `medium` is a bounded escalation only for small-scope high-risk core logic.
 - `STRICT / xhigh` is exceptional and should not be presented as the normal default.
+- Explicitly surface reviewer exhaustiveness as part of post-onboarding routing:
+  - reviewer exhaustiveness is the anti-dribble prompt protocol for provider-invoked review
+  - canonical protocol id: `review.prompt.exhaustive.v1`
+  - implementation entrypoint: `tools/loop/review_prompting.py`
+  - route maintainers to `docs/agents/LOOP_MAINLINE.md` when they need the current reviewer behavior and capability matrix
+
+## Post-onboarding reviewer routing
+
+Once onboarding is environment-complete or operational-ready, tell Codex where to find the committed reviewer exhaustiveness path.
+
+Minimum discoverability:
+- say `reviewer exhaustiveness` explicitly
+- name the canonical protocol id `review.prompt.exhaustive.v1`
+- point directly to `tools/loop/review_prompting.py`
+- route follow-up maintainer questions through `docs/agents/LOOP_MAINLINE.md`
 
 ## Done state
 
