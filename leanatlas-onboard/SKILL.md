@@ -153,10 +153,13 @@ Once the environment is operational-ready, explain/stage LOOP defaults as a post
 Supported presets:
 - `Budget Saver`
   - current default reviewer path: `FAST + low`
+  - current default reviewer tier policy: `LOW_PLUS_MEDIUM`
 - `Auditable`
  - `Balanced`
 
 Important:
+- `LOW_PLUS_MEDIUM` is the committed default reviewer tier policy.
+- `medium` is the standard bounded escalation tier.
 - Do not imply that onboarding already auto-writes or auto-applies these defaults unless that wiring has landed.
 - `medium` is a bounded escalation only for small-scope high-risk core logic.
 - `STRICT / xhigh` is exceptional and should not be presented as the normal default.

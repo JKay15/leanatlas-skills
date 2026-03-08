@@ -22,9 +22,12 @@ description: Route work through the current LOOP mainline system in LeanAtlas, u
 - Staged user preference presets when the task depends on default LOOP operating mode:
   - `Budget Saver`
     - current default reviewer path: `FAST + low`
+    - current default reviewer tier policy: `LOW_PLUS_MEDIUM`
     - default mainline recommendation
   - `Balanced`
   - `Auditable`
+  - `LOW_PLUS_MEDIUM` as the committed default reviewer tier policy
+  - `medium` as the standard bounded escalation tier
   - `medium` only as a bounded escalation for small-scope high-risk core logic
   - `STRICT / xhigh` only for exceptional audit-heavy paths
 
