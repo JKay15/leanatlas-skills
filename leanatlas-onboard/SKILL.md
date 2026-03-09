@@ -1,6 +1,6 @@
 ---
 name: leanatlas-onboard
-description: "First-run onboarding: print the LeanAtlas banner, ask for consent, initialize env + contracts + core tests, and generate Codex App automation prompts."
+description: "First-run onboarding: print the LeanAtlas onboarding visual card, ask for consent, initialize env + contracts + core tests, and generate Codex App automation prompts."
 ---
 
 ## What this skill is
@@ -9,7 +9,7 @@ This skill turns a fresh clone into a usable workspace **without asking the huma
 
 It is intentionally designed to feel like a product onboarding:
 
-1) show a banner,
+1) show a visual hero + info card,
 2) explain what will happen,
 3) ask for consent,
 4) run setup + verify,
@@ -30,39 +30,59 @@ It is intentionally designed to feel like a product onboarding:
 
 - Onboarding summary with selected option (A/B/C) and preflight result.
 - Mandatory post-onboarding automation install checklist generated from `docs/agents/AUTOMATIONS.md` + `automations/registry.json`.
-- On success: `.cache/leanatlas/onboarding/state.json` with environment completion.
+- After `bootstrap` + `doctor` + `real_agent_cmd` all pass: `.cache/leanatlas/onboarding/state.json` with environment completion.
 - On operational readiness: same state file with `steps.automations=ok` and `operational_ready=true`.
-- After bootstrap+doctor success: compacted root `AGENTS.md` onboarding block.
+- Post-onboarding LOOP defaults use the reserved local path `.cache/leanatlas/onboarding/loop_preferences.json` when explicitly staged.
+- After `bootstrap` + `doctor` + `real_agent_cmd` all pass: compacted root `AGENTS.md` onboarding block.
+- Post-onboarding discoverability must explicitly surface reviewer exhaustiveness:
+  - reviewer exhaustiveness
+  - `review.prompt.exhaustive.v1`
+  - `tools/loop/review_prompting.py`
+  - `docs/agents/LOOP_MAINLINE.md`
 
 ## Must-run checks
 
 - Preflight checks: `test -x ./.venv/bin/python`, deps import, and `lake --version`.
 - Verification gate for setup path: `./.venv/bin/python tests/run.py --profile core`.
 
-## Banner (print on first-run)
+## Banner (locale-aware, print on first-run)
+
+Default visual (from `docs/agents/BRANDING.md`):
 
 ```text
-       □   △   ○
-┌──────────────────────┐
-│  L E A N  A T L A S  │
-└──────────────────────┘
++------------------------------------------------------------------------------+
+| LEANATLAS :: Powered by LeanAtlas                                            |
++------------------------------------------------------------------------------+
+| [i] Welcome to LeanAtlas                                                     |
+| Choose: A) Full init (Recommended)  B) Python-only  C) Skip                  |
+| Operational gate: install/verify active automations before normal tasks.     |
++------------------------------------------------------------------------------+
 ```
 
-Banner source of truth:
+Locale-aware rule:
 
 - `docs/agents/BRANDING.md`
+- `docs/agents/locales/zh-CN/ONBOARDING_BANNER.md`
+
+Routing:
+- If the user prompt is Chinese/CJK, render the zh-CN onboarding visual from the locale asset.
+- Otherwise, render the default onboarding visual from `docs/agents/BRANDING.md`.
 
 ## Consent gate (hard rule)
 
 Before running *any* networked install or writing setup state, ask the user to choose:
 
-**A) Python-only setup (safe + fast)**
+**A) Full maintainer initialization (recommended)**
+- Execute `INIT_FOR_CODEX.md` (Steps 0–7, plus optional Step 8).
+
+**B) Python-only setup (safe + fast)**
 - Ensure `uv` exists.
 - Create/sync `.venv` via `uv sync --locked`.
-- Run core contracts: `.venv/bin/python tests/run.py --profile core`.
-
-**B) Full maintainer initialization (recommended)**
-- Execute `INIT_FOR_CODEX.md` (Steps 0–7, plus optional Step 8).
+- Still run the promised repo-local onboarding gates:
+  - ensure Repo-B skills are mounted (`.agents/skills/**`)
+  - install repo hooks via `bash scripts/install_repo_git_hooks.sh`
+  - run Lean warmup verification (`importGraph` check + `lake build LeanAtlas` + `lake lint`)
+  - run core contracts: `.venv/bin/python tests/run.py --profile core`
 
 **C) Skip (do nothing)**
 - Continue with the user’s task.
@@ -75,6 +95,7 @@ Treat onboarding as required when this file is missing/outdated, or when automat
 
 - `.cache/leanatlas/onboarding/state.json`
 - required operational gate: `steps.automations == "ok"` and `operational_ready == true`
+- post-onboarding LOOP defaults use the reserved path `.cache/leanatlas/onboarding/loop_preferences.json` when explicitly staged
 
 This path is gitignored.
 
@@ -94,18 +115,7 @@ If all pass:
 
 ## Execution (A/B)
 
-### A) Python-only
-
-1) Verify `uv`:
-   - `uv --version`
-2) If preflight failed, sync venv:
-   - `uv sync --locked`
-3) Verify critical imports (always):
-   - `./.venv/bin/python -c "import yaml, jsonschema; print('deps-ok')"`
-4) Run core contracts:
-   - `./.venv/bin/python tests/run.py --profile core`
-
-### B) Full maintainer init
+### A) Full maintainer init
 
 Follow `INIT_FOR_CODEX.md` as an executable checklist.
 
@@ -116,6 +126,24 @@ Hard requirements:
 - Fix root causes (no retry/jitter hacks).
 - Keep diffs minimal.
 - Any produced artifacts must land under `artifacts/**`.
+
+### B) Python-only
+
+1) Verify `uv`:
+   - `uv --version`
+2) If preflight failed, sync venv:
+   - `uv sync --locked`
+3) Verify critical imports (always):
+   - `./.venv/bin/python -c "import yaml, jsonschema; print('deps-ok')"`
+4) Ensure Repo-B skills are mounted (`.agents/skills/**`); if they are missing, initialize the skill subtree before continuing.
+5) Install repo-local git hooks:
+   - `bash scripts/install_repo_git_hooks.sh`
+6) Run Lean warmup verification:
+   - `test -d ./.lake/packages/importGraph`
+   - `lake build LeanAtlas`
+   - `lake lint`
+7) Run core contracts:
+   - `./.venv/bin/python tests/run.py --profile core`
 
 ## Codex App automations (required operational gate after environment setup)
 
@@ -134,23 +162,74 @@ Important:
 - Codex should not claim it can silently install them without user confirmation.
 - If the automation gate is not completed, reply with install/verification instructions only.
 
+## Post-onboarding LOOP defaults
+
+Once the environment is operational-ready, explain/stage LOOP defaults as a post-onboarding preference step, not as a bootstrap blocker.
+
+Supported presets:
+- `Budget Saver`
+  - current default reviewer path: `FAST + low`
+  - current default reviewer tier policy: `LOW_PLUS_MEDIUM`
+- `Auditable`
+ - `Balanced`
+
+Important:
+- `LOW_PLUS_MEDIUM` is the committed default reviewer tier policy.
+- `medium` is the standard bounded escalation tier.
+- Do not imply that onboarding already auto-writes or auto-applies these defaults unless that wiring has landed.
+- `medium` is a bounded escalation only for small-scope high-risk core logic.
+- `STRICT / xhigh` is exceptional and should not be presented as the normal default.
+- Explicitly surface reviewer exhaustiveness as part of post-onboarding routing:
+  - reviewer exhaustiveness is the anti-dribble prompt protocol for provider-invoked review
+  - canonical protocol id: `review.prompt.exhaustive.v1`
+  - implementation entrypoint: `tools/loop/review_prompting.py`
+  - route maintainers to `docs/agents/LOOP_MAINLINE.md` when they need the current reviewer behavior and capability matrix
+
+## Post-onboarding reviewer routing
+
+Once onboarding is environment-complete or operational-ready, tell Codex where to find the committed reviewer exhaustiveness path.
+
+Minimum discoverability:
+- say `reviewer exhaustiveness` explicitly
+- name the canonical protocol id `review.prompt.exhaustive.v1`
+- point directly to `tools/loop/review_prompting.py`
+- route follow-up maintainer questions through `docs/agents/LOOP_MAINLINE.md`
+
+## Repository-external paper ingress
+
+LeanAtlas onboarding must not imply that repository-external paper sources automatically inherit LeanAtlas `AGENTS.md` or workflow skills.
+
+If the user wants LeanAtlas to formalize a paper source outside this repository:
+- say that LeanAtlas instructions are repository-scoped
+- require the source to be ingressed into LeanAtlas-controlled scope first
+- acceptable staging examples:
+  - `.cache/leanatlas/tmp/<paper_id>/source/**`
+  - or a prepared `Problems/<slug>/` contract entry that then follows `docs/agents/OPERATOR_WORKFLOW.md`
+- if the user only points at an external file without ingress, do not pretend OPERATOR/formalization routing is already active
+
 ## Done state
 
-If A or B completes successfully, write:
+If A or B completes its local setup and verification gates, update:
 
 - `.cache/leanatlas/onboarding/state.json`
 
 Use the minimal schema defined in `docs/agents/ONBOARDING.md`.
 
-After `bootstrap` + `doctor` both pass, run:
+Record the bootstrap/doctor progress first:
 
 - `./.venv/bin/python tools/onboarding/finalize_onboarding.py --step bootstrap`
 - `./.venv/bin/python tools/onboarding/finalize_onboarding.py --step doctor`
 
-Expected result:
+Environment completion is stricter:
+- do not mark the environment complete before `bootstrap` + `doctor` + `real_agent_cmd` all pass
+- do not compact the root `AGENTS.md` onboarding block before `real_agent_cmd` passes
+- when real-agent configuration succeeds, also run:
+  - `./.venv/bin/python tools/onboarding/finalize_onboarding.py --step real_agent_cmd`
+
+Expected result after `bootstrap` + `doctor` + `real_agent_cmd` all pass:
 - root `AGENTS.md` onboarding section is compacted
 - verbose copy remains in `docs/agents/archive/AGENTS_ONBOARDING_VERBOSE.md`
-- environment completion can be true while operational readiness is still blocked
+- environment completion can be true while operational readiness is still blocked until the automations step passes
 
 ## Deliverables (what to report back)
 

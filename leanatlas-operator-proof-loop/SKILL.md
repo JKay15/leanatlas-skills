@@ -19,11 +19,21 @@ description: Solve ONE problem in OPERATOR mode by running the LeanAtlas small l
 
 ## Must-run checks
 - `lake build Problems.<slug>.Proof`
-- `python tools/problem_state/reconcile.py --problem <slug> --run-report Problems/<slug>/Reports/<run_id>/RunReport.json`
+- `uv run --locked python tools/problem_state/reconcile.py --problem <slug> --run-report Problems/<slug>/Reports/<run_id>/RunReport.json`
 
 ## Inputs
 - `problem_slug`: directory name under `Problems/` (e.g. `am_gm_ineq_2026_01`)
 - `budgets.limits`: optional overrides (max_attempts/max_steps/max_external_queries/max_wall_time_ms)
+
+## Repository-external paper ingress
+
+This skill assumes the problem is already inside LeanAtlas repository scope. If the human points Codex at a LaTeX/PDF/paper source outside this repository, do not assume LeanAtlas `AGENTS.md` and OPERATOR workflow automatically apply.
+
+Before using this skill on an external paper:
+- ingress the source into LeanAtlas-controlled scope such as `.cache/leanatlas/tmp/<paper_id>/source/**`
+- or prepare a bounded `Problems/<slug>/` contract entry inside the repository
+
+If no ingress happened yet, stop and say that repository-external inputs must be ingressed first.
 
 ## Hard constraints (OPERATOR)
 - Allowed edits: `Problems/<slug>/Proof.lean`, `Problems/<slug>/Cache.lean`, `Problems/<slug>/Cache/**/*.lean`, `Problems/<slug>/Scratch.lean`
