@@ -18,7 +18,13 @@ description: Route work through the current LOOP mainline system in LeanAtlas, u
   - maintainer LOOP work
   - operator proof-loop work
   - review acceleration / review orchestration work
+- A pointer to the reusable/non-LeanAtlas entry when the task should use generic `looplib` surfaces instead of LeanAtlas workflow adapters:
+  - `docs/setup/LOOP_LIBRARY_QUICKSTART.md`
+  - `.agents/skills/loop-mainline/SKILL.md`
 - An explicit statement of whether the requested capability is implemented, partial, or planned
+- LeanAtlas wrapper mapping for the current task:
+  - conversation Codex = root supervisor kernel
+  - delegated child supervisors/workers own bounded execution only
 - Staged user preference presets when the task depends on default LOOP operating mode:
   - `Budget Saver`
     - current default reviewer path: `FAST + low`

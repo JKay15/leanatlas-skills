@@ -3,6 +3,9 @@
 This directory contains **skills for Codex**. Each skill is a self-contained routing+workflow document.
 
 ## Skills
+- `.agents/skills/loop-mainline/SKILL.md` — Generic LOOP mainline entrypoint (reusable core/orchestration/supervisor routing).
+- `.agents/skills/loop-review-orchestration/SKILL.md` — Generic staged review-orchestration routing.
+- `.agents/skills/loop-batch-supervisor/SKILL.md` — Generic parent-supervisor + publication/rematerialization routing.
 - `.agents/skills/leanatlas-onboard/SKILL.md` — First-run onboarding (banner + consented setup).
 - `.agents/skills/leanatlas-operator-proof-loop/SKILL.md` — OPERATOR proof loop (SUCCESS/TRIAGED + evidence).
 - `.agents/skills/leanatlas-maintainer-execplan/SKILL.md` — MAINTAINER changes via ExecPlan (large changes).

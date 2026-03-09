@@ -15,6 +15,7 @@ description: Maintain and upgrade LOOP provider routing, Python SDK/MCP interfac
 ## Outputs
 - Updated LOOP contracts/schemas/tests with replayable verification (`core` and `nightly` pass)
 - Maintainer-facing decision notes in the active ExecPlan
+- LeanAtlas wrapper docs/tests kept in sync with generic LOOP semantics such as the root supervisor kernel mapping and root-issued exception artifacts
 
 ## Must-run checks
 - `uv run --locked python tests/contract/check_loop_contract_docs.py`
